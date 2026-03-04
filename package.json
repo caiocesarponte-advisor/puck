@@ -1,0 +1,14 @@
+{
+  "name": "puck-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace puck-host-next dev",
+    "build": "yarn workspaces run build",
+    "test": "yarn workspace @itarget/puck-kit test",
+    "lint": "yarn workspaces run lint"
+  }
+}
