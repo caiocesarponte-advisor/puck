@@ -1,76 +1,74 @@
 # Puck Monorepo Profissional
 
-Monorepo com Yarn Workspaces (v1) contendo:
+Monorepo com Yarn Workspaces contendo:
 
 - `@itarget/puck-kit`: pacote reutilizável com registry, componentes e API por interface.
 - `puck-host-next`: app host Next.js (App Router) usando `Puck` e `Render` oficiais.
 
-## 1) Como instalar
+## Instalação
 
 ```bash
 yarn install
 ```
 
-## 2) Como rodar
+## Execução
 
 ```bash
 yarn workspace puck-host-next dev
 ```
 
-## 3) Como adicionar componente seguindo padrão oficial do Puck
-
-1. Defina as props no pacote `packages/puck-kit/src/components/component-types.ts`.
-2. Crie o `ComponentConfig` no arquivo `packages/puck-kit/src/components/default-components.tsx`.
-3. Registre no `getDefaultRegistry()` via `registerComponent(...)`.
-4. Gere `config` no host com `buildPuckConfigFromRegistry(getDefaultRegistry())`.
-
-Padrão oficial mantido:
+## Padrão oficial do Puck (sem wrappers de core)
 
 ```tsx
-import { Puck } from "@measured/puck";
+import { Puck, Render } from "@measured/puck";
 
 <Puck config={config} data={data} onChange={setData} />
-```
-
-Render oficial:
-
-```tsx
-import { Render } from "@measured/puck";
-
 <Render config={config} data={data} />
 ```
 
-## 4) Como trocar API
+## Como adicionar componentes (padrão recomendado)
 
-O host depende da interface `PageDocumentApi`.
+1. Defina as props em `packages/puck-kit/src/components/component-types.ts`.
+2. Crie o `ComponentConfig` em `packages/puck-kit/src/components/default-components.tsx`.
+3. Registre no `getDefaultRegistry()`.
+4. Gere a configuração no host com `buildPuckConfigFromRegistry(getDefaultRegistry())`.
 
-Implementações disponíveis:
-- `MockPageDocumentApi` (memória)
-- `HttpPageDocumentApi` (`fetch`)
+## API desacoplada por interface
 
-Para trocar, substitua apenas a instância injetada no host:
+Interface:
+
+```ts
+interface PageDocumentApi {
+  getDocument(slug: string): Promise<PageDocument>;
+  saveDocument(document: PageDocument): Promise<void>;
+  listDocuments(): Promise<PageDocumentMetadata[]>;
+}
+```
+
+Implementações:
+- `MockPageDocumentApi`
+- `HttpPageDocumentApi`
+
+Troca de implementação no host (injeção):
 
 ```ts
 const api = new HttpPageDocumentApi("https://api.exemplo.com");
 ```
 
-## 5) Aviso sobre DangerousHtml
+## DangerousHtml (aviso)
 
-Componente `DangerousHtml` aceita políticas:
-- `strict`
-- `balanced`
-- `unsafe`
+`DangerousHtml` suporta `strict`, `balanced` e `unsafe`.
 
-A política `unsafe` exige `allowUnsafeHtml=true` explicitamente. Sem isso, lança erro.
+A política `unsafe` exige `allowUnsafeHtml=true`; caso contrário lança erro.
 
-## 6) Fluxo de dados: Editor → API → Render
+## Fluxo de dados
 
 1. Usuário edita no `Puck`.
-2. `onChange` atualiza `data` no estado.
-3. Ação de salvar envia documento para `PageDocumentApi`.
-4. `Render` usa o mesmo `config` e `data` para saída final.
+2. `onChange` atualiza `data`.
+3. Salvamento persiste via `PageDocumentApi`.
+4. `Render` exibe o mesmo `config + data`.
 
-## 7) Exemplo mínimo de uso em outro projeto
+## Exemplo mínimo em outro projeto
 
 ```tsx
 import { Puck, Render } from "@measured/puck";
@@ -86,3 +84,7 @@ export function PreviewScreen({ data }) {
   return <Render config={config} data={data} />;
 }
 ```
+
+## Documentação de componentes por plano (cliente final)
+
+Consulte: `docs/componentes-por-plano.md`

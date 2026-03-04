@@ -5,12 +5,17 @@ import {
   columnLayoutComponent,
   dangerousHtmlComponent,
   dividerBlockComponent,
+  featureListBlockComponent,
+  frequentlyAskedQuestionsBlockComponent,
   headingBlockComponent,
   imageBlockComponent,
+  pricingCardBlockComponent,
   richTextBlockComponent,
   rowLayoutComponent,
   sectionContainerComponent,
-  stackGroupComponent
+  stackGroupComponent,
+  statGroupBlockComponent,
+  testimonialBlockComponent
 } from "../components/default-components";
 
 export type ComponentCategory = "layout" | "content" | "advanced";
@@ -63,16 +68,28 @@ export const getDefaultRegistry = (): ComponentRegistry => {
   const registry = createComponentRegistry();
 
   registerComponent(registry, "advanced", "DangerousHtml", dangerousHtmlComponent as ComponentConfig<object>);
+
   registerComponent(registry, "layout", "SectionContainer", sectionContainerComponent as ComponentConfig<object>);
   registerComponent(registry, "layout", "RowLayout", rowLayoutComponent as ComponentConfig<object>);
   registerComponent(registry, "layout", "ColumnLayout", columnLayoutComponent as ComponentConfig<object>);
   registerComponent(registry, "layout", "StackGroup", stackGroupComponent as ComponentConfig<object>);
   registerComponent(registry, "layout", "CardGroup", cardGroupComponent as ComponentConfig<object>);
+
   registerComponent(registry, "content", "HeadingBlock", headingBlockComponent as ComponentConfig<object>);
   registerComponent(registry, "content", "RichTextBlock", richTextBlockComponent as ComponentConfig<object>);
   registerComponent(registry, "content", "ImageBlock", imageBlockComponent as ComponentConfig<object>);
   registerComponent(registry, "content", "ButtonCallToAction", buttonCallToActionComponent as ComponentConfig<object>);
   registerComponent(registry, "content", "DividerBlock", dividerBlockComponent as ComponentConfig<object>);
+  registerComponent(registry, "content", "FeatureListBlock", featureListBlockComponent as ComponentConfig<object>);
+  registerComponent(registry, "content", "TestimonialBlock", testimonialBlockComponent as ComponentConfig<object>);
+  registerComponent(registry, "content", "StatGroupBlock", statGroupBlockComponent as ComponentConfig<object>);
+  registerComponent(registry, "content", "PricingCardBlock", pricingCardBlockComponent as ComponentConfig<object>);
+  registerComponent(
+    registry,
+    "content",
+    "FrequentlyAskedQuestionsBlock",
+    frequentlyAskedQuestionsBlockComponent as ComponentConfig<object>
+  );
 
   return registry;
 };
