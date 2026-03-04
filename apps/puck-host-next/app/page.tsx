@@ -20,6 +20,110 @@ const initialData: Data = {
   }
 };
 
+const pagePresets: { id: string; label: string; description: string; data: Data }[] = [
+  {
+    id: "blank",
+    label: "Página em branco",
+    description: "Comece do zero com apenas o título da página.",
+    data: initialData
+  },
+  {
+    id: "institutional",
+    label: "Institucional",
+    description: "Hero + diferenciais + prova social.",
+    data: {
+      root: {
+        props: {
+          title: "Institucional"
+        }
+      },
+      content: [
+        { type: "SectionContainer", props: { id: "sec-hero", sectionName: "Hero", paddingY: "large", maxWidth: "wide", backgroundColor: "#f8fafc" } },
+        {
+          type: "SectionContainer",
+          props: { id: "sec-differentials", sectionName: "Diferenciais", paddingY: "large", maxWidth: "wide", backgroundColor: "#ffffff" }
+        },
+        { type: "SectionContainer", props: { id: "sec-social-proof", sectionName: "Prova social", paddingY: "medium", maxWidth: "narrow", backgroundColor: "#f8fafc" } }
+      ],
+      zones: {
+        "sec-hero:children": [{ type: "RowLayout", props: { id: "row-hero", columns: "2", gap: "large", verticalAlign: "center" } }],
+        "row-hero:column-1": [{ type: "StackGroup", props: { id: "stack-hero", gap: "small" } }],
+        "stack-hero:children": [
+          { type: "HeadingBlock", props: { id: "hero-title", text: "Construa páginas institucionais em minutos", level: "h1", align: "left" } },
+          {
+            type: "RichTextBlock",
+            props: { id: "hero-text", content: "Padronize comunicação, escale conteúdo e publique rápido com o editor visual.", maxWidth: "readable" }
+          },
+          { type: "ButtonCallToAction", props: { id: "hero-cta", label: "Solicitar demonstração", href: "#", variant: "primary", openInNewTab: false } }
+        ],
+        "row-hero:column-2": [
+          {
+            type: "ImageBlock",
+            props: {
+              id: "hero-image",
+              src: "https://placehold.co/900x600",
+              alt: "Painel institucional",
+              borderRadius: "medium",
+              caption: "Editor com blocos reutilizáveis"
+            }
+          }
+        ],
+        "sec-differentials:children": [{ type: "CardGroup", props: { id: "diff-cards", columns: "3", gap: "medium" } }],
+        "diff-cards:children": [
+          { type: "ColumnLayout", props: { id: "diff-card-1", width: "full", padding: "medium", backgroundColor: "#f8fafc" } },
+          { type: "ColumnLayout", props: { id: "diff-card-2", width: "full", padding: "medium", backgroundColor: "#f8fafc" } },
+          { type: "ColumnLayout", props: { id: "diff-card-3", width: "full", padding: "medium", backgroundColor: "#f8fafc" } }
+        ],
+        "diff-card-1:children": [
+          { type: "HeadingBlock", props: { id: "diff-card-1-title", text: "Publicação rápida", level: "h3", align: "left" } },
+          { type: "RichTextBlock", props: { id: "diff-card-1-text", content: "Monte páginas com componentes prontos e consistentes.", maxWidth: "normal" } }
+        ],
+        "diff-card-2:children": [
+          { type: "HeadingBlock", props: { id: "diff-card-2-title", text: "Padronização visual", level: "h3", align: "left" } },
+          { type: "RichTextBlock", props: { id: "diff-card-2-text", content: "Garanta identidade visual em todo o site.", maxWidth: "normal" } }
+        ],
+        "diff-card-3:children": [
+          { type: "HeadingBlock", props: { id: "diff-card-3-title", text: "Escalável por times", level: "h3", align: "left" } },
+          { type: "RichTextBlock", props: { id: "diff-card-3-text", content: "Marketing, produto e conteúdo colaborando no mesmo fluxo.", maxWidth: "normal" } }
+        ],
+        "sec-social-proof:children": [
+          {
+            type: "TestimonialBlock",
+            props: {
+              id: "testimonial-main",
+              quote: "Reduzimos de dias para horas o tempo para publicar uma nova página.",
+              authorName: "Time de Growth",
+              authorRole: "Empresa Exemplo"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    id: "landing",
+    label: "Landing de oferta",
+    description: "Seções com proposta, recursos, preço e FAQ.",
+    data: {
+      root: {
+        props: {
+          title: "Landing de oferta"
+        }
+      },
+      content: [
+        { type: "HeadingBlock", props: { id: "landing-title", text: "Especialização intensiva para equipes de marketing", level: "h1", align: "left" } },
+        {
+          type: "RichTextBlock",
+          props: { id: "landing-description", content: "Aprenda processos e frameworks para criar páginas de alta conversão sem depender de desenvolvimento.", maxWidth: "readable" }
+        },
+        { type: "FeatureListBlock", props: { id: "landing-features", title: "O que você vai dominar", description: "Conteúdo aplicado para rotina real.", features: "Arquitetura de página\nCopy orientada a conversão\nMétricas e otimização", columns: "3" } },
+        { type: "PricingCardBlock", props: { id: "landing-pricing", planName: "Turma Ao Vivo", price: "R$ 1.290", periodLabel: "pagamento único", features: "20 horas de conteúdo\nMateriais práticos\nComunidade exclusiva", callToActionLabel: "Quero minha vaga", callToActionHref: "#", highlighted: true } },
+        { type: "FrequentlyAskedQuestionsBlock", props: { id: "landing-faq", title: "Perguntas frequentes", items: "Para quem é?|Profissionais de marketing, produto e conteúdo\nRecebo certificado?|Sim, certificado digital ao final\nAs aulas ficam gravadas?|Sim, acesso por 12 meses" } }
+      ]
+    }
+  }
+];
+
 const styleBlueprint = {
   visualDirection: [
     "Header com título forte + subtítulo curto orientado a valor.",
@@ -92,6 +196,10 @@ export default function HomePage() {
   const config = useMemo(() => buildPuckConfigFromRegistry(getDefaultRegistry()), []);
   const [data, setData] = useState<Data>(initialData);
 
+  const applyPreset = (presetData: Data) => {
+    setData(JSON.parse(JSON.stringify(presetData)) as Data);
+  };
+
   const handleSave = async () => {
     const pageDocument: PageDocument = {
       slug: "home",
@@ -124,6 +232,17 @@ export default function HomePage() {
                 <TabsTrigger value="blueprint">Playbook</TabsTrigger>
               </TabsList>
               <TabsContent value="editor">
+                <div className="mb-4 rounded-lg border bg-muted/20 p-3">
+                  <p className="text-sm font-medium">Presets padrão</p>
+                  <p className="mb-3 text-xs text-muted-foreground">Selecione um modelo inicial para acelerar a estrutura da página.</p>
+                  <div className="flex flex-wrap gap-2">
+                    {pagePresets.map((preset) => (
+                      <Button key={preset.id} variant="outline" size="sm" onClick={() => applyPreset(preset.data)} title={preset.description}>
+                        {preset.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
                 <Puck config={config} data={data} onChange={setData} />
               </TabsContent>
               <TabsContent value="preview">
